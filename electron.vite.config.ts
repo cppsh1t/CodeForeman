@@ -4,7 +4,13 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  main: {},
+  main: {
+    resolve: {
+      alias: {
+        '@main': resolve('src/main')
+      }
+    }
+  },
   preload: {},
   renderer: {
     resolve: {
