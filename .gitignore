@@ -5,3 +5,6 @@ out
 .eslintcache
 *.log*
 .vscode
+plan.md
+planv1.md
+.sisyphus
