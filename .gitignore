@@ -8,3 +8,8 @@ out
 plan.md
 planv1.md
 .sisyphus
+*.db
+*.db-wal
+*.db-shm
+playwright-report/
+test-results/
