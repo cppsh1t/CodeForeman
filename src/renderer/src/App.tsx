@@ -1,8 +1,16 @@
 import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
 
+// Domain contract consumability (Task 1): proves shared types resolve in renderer web context
+export type { ProjectStatus, TaskStatus, PlanStatus, ErrorCode, CorrelationId } from '@shared/types'
+
 function App(): React.JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  const ipcHandle = (): void => {
+    window.api.projectList({}).then((res) => {
+      if (res.ok) console.log('projects:', res.data)
+      else console.error('ipc error:', res.error)
+    })
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center overflow-hidden select-none bg-background">
