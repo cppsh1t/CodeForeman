@@ -33,7 +33,7 @@ import type { DatabaseInstance } from '@main/db/client'
  */
 export function withTransaction<T>(db: DatabaseInstance, fn: (txDb: DatabaseInstance) => T): T {
   return db.transaction((tx) => {
-    return fn(tx as DatabaseInstance)
+    return fn(tx as unknown as DatabaseInstance)
   })
 }
 

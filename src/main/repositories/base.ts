@@ -50,6 +50,7 @@ export class BaseRepository {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   insertMany(rows: any[]): any[] {
     if (rows.length === 0) return []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.db.insert(this.table).values(rows).returning().all() as any[]
   }
 
@@ -126,6 +127,7 @@ export class BaseRepository {
     if (!filters) {
       throw new Error('BaseRepository.update requires a filter condition for safety.')
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.db.update(this.table).set(values).where(filters).returning().all() as any[]
   }
 
@@ -144,6 +146,7 @@ export class BaseRepository {
     if (!filters) {
       throw new Error('BaseRepository.delete requires a filter condition for safety.')
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.db.delete(this.table).where(filters).returning().all() as any[]
   }
 

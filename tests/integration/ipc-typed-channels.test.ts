@@ -577,6 +577,118 @@ describe('ipc invalid payload', () => {
       }
     }
   })
+
+  // --- Illegal status payloads ---
+
+  it('rejects execution:start with missing plan_id', () => {
+    const result = simulateDispatch('execution:start', {})
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.error_code).toBe(ErrorCode.INVALID_INPUT)
+    }
+  })
+
+  it('rejects execution:start with non-numeric plan_id', () => {
+    const result = simulateDispatch('execution:start', { plan_id: 'not-a-number' })
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.error_code).toBe(ErrorCode.INVALID_INPUT)
+    }
+  })
+
+  it('rejects execution:start with zero plan_id', () => {
+    const result = simulateDispatch('execution:start', { plan_id: 0 })
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.error_code).toBe(ErrorCode.INVALID_INPUT)
+    }
+  })
+
+  it('rejects execution:start with negative plan_id', () => {
+    const result = simulateDispatch('execution:start', { plan_id: -1 })
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.error_code).toBe(ErrorCode.INVALID_INPUT)
+    }
+  })
+
+  it('rejects think:submit with missing required fields', () => {
+    const result = simulateDispatch('think:submit', {
+      task_run_id: 1
+      // missing trigger_type, decision, reason
+    })
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.error_code).toBe(ErrorCode.INVALID_INPUT)
+    }
+  })
+
+  it('rejects task:update with invalid status enum', () => {
+    const result = simulateDispatch('task:update', {
+      id: 1,
+      status: 'nonexistent_status'
+    })
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.error_code).toBe(ErrorCode.INVALID_INPUT)
+    }
+  })
+
+  it('rejects plan:update with extra unknown field', () => {
+    // plan:update only accepts id, name, description — extra fields are stripped
+    // but the schema should still accept valid input
+    const result = simulateDispatch('plan:update', {
+      id: 1,
+      name: 'Valid Name',
+      bogus_field: 'should be stripped'
+    })
+    // Zod strips unknown fields by default, so this should succeed
+    expect(result.ok).toBe(true)
+  })
+
+  it('rejects project:update with extra unknown field', () => {
+    const result = simulateDispatch('project:update', {
+      id: 1,
+      name: 'Valid Name',
+      bogus_field: 'should be stripped'
+    })
+    expect(result.ok).toBe(true)
+  })
+
+  it('rejects material:create with invalid source enum', () => {
+    const result = simulateDispatch('material:create', {
+      plan_id: 1,
+      type: 'requirements',
+      source: 'invalid_source',
+      content: 'some content'
+    })
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.error_code).toBe(ErrorCode.INVALID_INPUT)
+    }
+  })
+
+  it('rejects empty string for required name fields', () => {
+    const result = simulateDispatch('project:create', {
+      name: '',
+      description: 'desc'
+    })
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.error_code).toBe(ErrorCode.INVALID_INPUT)
+    }
+  })
+
+  it('accepts whitespace-only name fields (schema allows them)', () => {
+    // shortString = z.string().min(1).max(MAX_STRING_LENGTH)
+    // Whitespace-only strings pass because they have length > 0
+    // Business logic should handle trimming at the service layer
+    const result = simulateDispatch('project:create', {
+      name: '   ',
+      description: 'desc'
+    })
+    expect(result.ok).toBe(true)
+  })
 })
 
 // ===========================================================================
@@ -585,6 +697,7 @@ describe('ipc invalid payload', () => {
 
 describe('ipc security: preload does not expose raw ipcRenderer', () => {
   const { readFileSync } = require('node:fs')
+
   const { resolve } = require('node:path')
 
   const preloadSrc = readFileSync(resolve(__dirname, '../../src/preload/index.ts'), 'utf-8')

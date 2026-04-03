@@ -24,6 +24,11 @@ export class TaskRunRepository extends BaseRepository {
       .all() as unknown as TaskRunRow[]
   }
 
+  /** List all task runs for a given task. */
+  findByTaskId(taskId: number): TaskRunRow[] {
+    return this.findAll(eq(taskRuns.task_id, taskId)) as TaskRunRow[]
+  }
+
   /** Update a task run by id. */
   updateTaskRun(
     id: number,

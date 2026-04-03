@@ -141,9 +141,9 @@ describe('Security baseline: preload', () => {
 })
 
 describe('Security baseline: no raw ipcRenderer leak across entire src/', () => {
-  const mainSrc = mainSource()
+  const _mainSrc = mainSource()
   const preloadSource = readSource(PRELOAD_SRC)
-  const preloadDts = readSource(PRELOAD_DTS)
+  const _preloadDts = readSource(PRELOAD_DTS)
   // Renderer source
   const rendererSource = readFileSync(resolve(__dirname, '../../src/renderer/src/App.tsx'), 'utf-8')
 

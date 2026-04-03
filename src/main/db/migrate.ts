@@ -22,6 +22,7 @@ function resolveMigrationsFolder(): string {
 
   // Electron packaged/dev runtime (app path may be app.asar in production).
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { app } = require('electron') as { app?: { getAppPath?: () => string } }
     const appPath = app?.getAppPath?.()
     if (appPath) candidates.push(join(appPath, 'drizzle'))
@@ -64,7 +65,9 @@ export function migrateDatabase(dbPath: string): void {
 
   // Dynamically import better-sqlite3 and drizzle here to avoid circular
   // dependency with client.ts (which imports schema, which is imported here).
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const Database = require('better-sqlite3')
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { drizzle } = require('drizzle-orm/better-sqlite3')
 
   const sqlite = new Database(dbPath)

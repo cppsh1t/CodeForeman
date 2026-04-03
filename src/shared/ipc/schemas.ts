@@ -123,9 +123,7 @@ const errorCodeEnum = z.enum([
   ErrorCode.DB_CONSTRAINT,
   ErrorCode.AI_API_ERROR,
   ErrorCode.AI_RATE_LIMITED,
-  ErrorCode.AI_CONTEXT_TOO_LONG,
-  ErrorCode.AUTH_ERROR,
-  ErrorCode.AUTH_EXPIRED
+  ErrorCode.AI_CONTEXT_TOO_LONG
 ])
 
 // ── Per-Channel Schema Definitions ──

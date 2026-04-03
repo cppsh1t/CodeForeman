@@ -3,7 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { setupIpc } from './ipc'
-import { initDatabase, migrateDatabase, closeDatabase } from './db'
+import { initDatabase, migrateDatabase, closeDatabase, getDatabase } from './db'
+import { RecoveryService } from '@main/services/recovery'
 
 // Domain contracts — single source of truth (Task 1)
 export {
@@ -168,6 +169,25 @@ app
     const dbPath = join(userDataPath, 'codeforeman.db')
     migrateDatabase(dbPath)
     initDatabase(dbPath)
+
+    // Startup recovery — reconcile orphaned running states (Task 9)
+    try {
+      const db = getDatabase()
+      const recoveryService = new RecoveryService(db)
+      const recoveryResult = recoveryService.sweep()
+      if (recoveryResult.plansRecovered > 0) {
+        console.info(
+          `[startup] Recovery: ${recoveryResult.plansRecovered} plans, ` +
+            `${recoveryResult.runsReconciled} runs, ${recoveryResult.tasksReset} tasks`
+        )
+      }
+    } catch (err) {
+      console.error(
+        '[startup] Recovery sweep failed:',
+        err instanceof Error ? err.message : String(err)
+      )
+      // Non-fatal: app should still start even if recovery fails
+    }
 
     // IPC — typed channel dispatcher with validation (Task 4)
     setupIpc()

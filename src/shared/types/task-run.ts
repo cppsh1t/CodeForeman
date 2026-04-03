@@ -35,11 +35,9 @@ export const ErrorCode = {
   // AI / OpenCode
   AI_API_ERROR: 'AI_API_ERROR',
   AI_RATE_LIMITED: 'AI_RATE_LIMITED',
-  AI_CONTEXT_TOO_LONG: 'AI_CONTEXT_TOO_LONG',
+  AI_CONTEXT_TOO_LONG: 'AI_CONTEXT_TOO_LONG'
 
-  // Auth
-  AUTH_ERROR: 'AUTH_ERROR',
-  AUTH_EXPIRED: 'AUTH_EXPIRED'
+  // Auth errors mapped to AI_API_ERROR (no separate auth error codes)
 } as const
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode]

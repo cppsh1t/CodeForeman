@@ -11,3 +11,8 @@ export { TaskRepository, type TaskRow } from './task'
 export { TaskRunRepository, type TaskRunRow } from './task-run'
 export { RunMessageRepository, type RunMessageRow } from './run-message'
 export { ThinkDecisionRepository, type ThinkDecisionRow } from './think-decision'
+export {
+  TransactionFacade,
+  type StartPlanExecutionResult,
+  type CompleteTaskRunResult
+} from './transaction-facade'

@@ -13,3 +13,4 @@ export {
   type DatabaseInstance
 } from './client'
 export { migrateDatabase } from './migrate'
+export { withTransaction, tryTransaction } from './transaction'

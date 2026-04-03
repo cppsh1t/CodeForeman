@@ -18,7 +18,9 @@ import { MaterialType, MaterialSource } from '../types/plan-material'
 import { isCorrelationId, generateCorrelationId } from '../types/correlation'
 
 // ── Helper: forces TS to check the argument type without unused-variable issues ──
-function _expect<T>(_value: T): void {}
+function _expect<T>(_value: T): void {
+  // Intentionally empty — this is a compile-time type assertion helper
+}
 
 // ── Status literal rejection guards ──
 
@@ -66,6 +68,7 @@ _expect<MaterialSource>('clipboard')
 
 // ── Entity type field strictness (status field rejects invalid values) ──
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 _expect<Project>({
   id: 1 as any,
   name: 'Test',
@@ -88,6 +91,7 @@ _expect<TaskRun>({
   created_at: '',
   updated_at: ''
 })
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 // ── CorrelationId runtime guard verification ──
 

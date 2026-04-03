@@ -17,4 +17,3 @@ export interface Project extends BaseEntity {
   description: string
   status: ProjectStatus
 }
-
